@@ -1,0 +1,8 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="result-box {{ status }}">
+  <h2>{{ message }}</h2>
+  <a href="{{ url_for('home') }}" class="primary-btn">Back to Dashboard</a>
+</div>
+
+{% endblock %}

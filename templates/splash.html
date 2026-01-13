@@ -1,0 +1,15 @@
+{% extends "base.html" %} {% block content %}
+<div class="splash-page">
+  <div class="splash-container">
+    <div class="logo-box">B</div>
+    <h1 class="splash-logo">BomRadar</h1>
+    <p class="splash-tagline">AI-powered fraud detection</p>
+  </div>
+</div>
+
+<script>
+  setTimeout(() => {
+    window.location.href = "{{ url_for('welcome') }}";
+  }, 2500);
+</script>
+{% endblock %}

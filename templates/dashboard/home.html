@@ -1,0 +1,38 @@
+{% extends "base.html" %} {% block content %}
+<div class="dashboard">
+  <h1 class="dashboard-title">
+    Welcome back, {{ session["user"]["first_name"] }}!
+  </h1>
+  <p class="dashboard-subtitle">
+    Monitor transactions and detect fraud in real time
+  </p>
+
+  <!-- Summary Cards -->
+  <div class="summary-cards">
+    <div class="card">
+      <h3>Total Balance</h3>
+      <p class="card-value">500,000TL</p>
+    </div>
+
+    <div class="card">
+      <h3>Transactions Today</h3>
+      <p class="card-value">12</p>
+    </div>
+
+    <div class="card">
+      <h3>Fraud Alerts</h3>
+      <p class="card-value danger">2</p>
+    </div>
+  </div>
+
+  <!-- Primary Actions -->
+  <div class="dashboard-actions">
+    <a href="{{ url_for('send_money') }}" class="btn btn-primary">
+      Send Money
+    </a>
+    <a href="{{ url_for('history') }}" class="btn btn-outline">
+      View History
+    </a>
+  </div>
+</div>
+{% endblock %}

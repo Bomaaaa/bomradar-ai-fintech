@@ -1,0 +1,39 @@
+{% extends "base.html" %} {% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <h2 class="auth-title">Log in to BomRadar</h2>
+    <p class="auth-subtitle">Secure access to your fraud detection dashboard</p>
+
+    <form method="POST">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="you@example.com"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter your password"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn primary-btn full-width">Log In</button>
+    </form>
+
+    <p class="auth-footer">
+      Don't have an account?
+      <a href="{{ url_for('signup') }}">Sign up</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

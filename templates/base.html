@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>BomRadar</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <!-- Navbar -->
+    {% if show_navbar %}
+    <!--Wrapping the navbar in a conditional block -->
+    <nav class="navbar">
+      <div class="nav-brand">
+        <a href="{{ url_for('home') }}" class="brand-link">BomRadar</a>
+      </div>
+      <ul class="nav-links">
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('send_money') }}">Send</a></li>
+        <li><a href="{{ url_for('history') }}">History</a></li>
+        <li><a href="{{ url_for('help_page') }}">Help</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+      </ul>
+
+      {% if session.get("user") %}
+      <!-- Profile section (on the right side) -->
+      <div class="nav-profile">
+        <a href="{{ url_for('profile') }}" class="profile-link">
+          <div class="profile-avatar">
+            {{ session["user"]["first_name"][0] }}
+          </div>
+          <span class="profile-name">
+            {{ session["user"]["first_name"] }}
+          </span>
+        </a>
+      </div>
+      {% endif %}
+    </nav>
+
+    {% endif %}
+
+    <!-- Page Content -->
+    <main class="container">{% block content %}{% endblock %}</main>
+  </body>
+</html>

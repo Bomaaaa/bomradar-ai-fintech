@@ -1,0 +1,17 @@
+{% extends "base.html" %} {% block content %}
+<div class="welcome-page">
+  <div class="welcome-container">
+    <h1 class="welcome-title">Welcome to BomRadar</h1>
+    <p class="welcome-subtitle">
+      Secure, AI-powered fraud detection for modern digital transactions.
+    </p>
+
+    <div class="welcome-actions">
+      <a href="{{ url_for('signup') }}" class="btn primary-btn">
+        Get Started
+      </a>
+      <a href="{{ url_for('login') }}" class="btn btn-outline"> Log In </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
