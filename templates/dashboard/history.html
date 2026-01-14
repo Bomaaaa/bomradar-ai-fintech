@@ -3,30 +3,38 @@
 <h2>Transaction History</h2>
 
 <div class="history-table">
+  {% if user.transactions and user.transactions|length > 0 %}
+
   <table>
     <thead>
       <tr>
-        <th>Date</th>
+        <th>#</th>
         <th>Recipient</th>
         <th>Amount</th>
         <th>Status</th>
       </tr>
     </thead>
+
     <tbody>
+      {% for tx in user.transactions %}
       <tr>
-        <td>2025-01-02</td>
-        <td>John Doe</td>
-        <td>$120</td>
+        <td>{{ loop.index }}</td>
+        <td>{{ tx.recipient }}</td>
+        <td>₺ {{ tx.amount }}</td>
+
+        {% if tx.status == "Success" %}
         <td class="success">Completed</td>
-      </tr>
-      <tr>
-        <td>2025-01-01</td>
-        <td>Jane Smith</td>
-        <td>$950</td>
+        {% else %}
         <td class="danger">Flagged</td>
+        {% endif %}
       </tr>
+      {% endfor %}
     </tbody>
   </table>
+
+  {% else %}
+  <p>No transactions yet. Start by sending money.</p>
+  {% endif %}
 </div>
 
 {% endblock %}

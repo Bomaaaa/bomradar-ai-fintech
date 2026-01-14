@@ -38,12 +38,12 @@ else:
 # authentication routes
 @app.route("/", methods=["GET"])
 def splash():
-    return render_template("splash.html", show_navbar=False)
+    return render_template("splash.html", user=None)
 
 
 @app.route("/welcome")
 def welcome():
-    return render_template("welcome.html", show_navbar=True)
+    return render_template("welcome.html", user=None)
 
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -97,7 +97,7 @@ def login():
         user = fake_users.get(email)
 
         if user and user["password"] == password:
-            session["user"] = user
+            session["user"] = email  # store user email in session
             return redirect(url_for("home"))
         else:
             return render_template("auth/login.html", error="Invalid email or password")
@@ -115,15 +115,36 @@ def logout():
 @app.route("/home")
 @login_required
 def home():
-    return render_template("dashboard/home.html", show_navbar=True)
+    email = session.get("user")
+    # get user email from session
+
+    # Check if email is actually a dict and extract the email string
+    if isinstance(email, dict):
+        email = email.get("email", "")
+
+    # Ensure email is a string
+    if not isinstance(email, str) or email not in fake_users:
+        session.clear()
+        return redirect(url_for("login"))
+
+    if email not in fake_users:
+        session.clear()
+        return redirect(url_for("login"))
+
+    user = fake_users[email]  # get user data from fake database
+    return render_template("dashboard/home.html", user=user)
 
 
 @app.route("/send", methods=["GET", "POST"])
 @login_required
 def send_money():
 
-    current_user = session["user"]  # logged in user object
-    email = current_user["email"]
+    email = session["user"]  # get user email from session
+    if email not in fake_users:
+        session.clear()
+        return redirect(url_for("login"))
+
+    current_user = fake_users[email]  # get user data from fake database
 
     if request.method == "POST":
         recipient = request.form["recipient"]
@@ -141,7 +162,12 @@ def send_money():
             )
 
         # Rule 2: Suspicious large transfer (account draining)
-        if amount >= 0.9 * USER_BALANCE:
+        if amount >= 0.9 * current_user["balance"]:
+            current_user["fraud_alerts"] += 1  # increment fraud alerts
+            current_user["transactions"].append(
+                {"recipient": recipient, "amount": amount, "status": "Fraud Blocked"}
+            )
+
             return render_template(
                 "result.html",
                 status="danger",
@@ -218,12 +244,25 @@ def send_money():
 @app.route("/history")
 @login_required
 def history():
-    return render_template("dashboard/history.html", show_navbar=True)
+    email = session["user"]
+    if email not in fake_users:
+        session.clear()
+        return redirect(url_for("login"))
+
+    user = fake_users[email]
+    return render_template("dashboard/history.html", user=user)
 
 
 @app.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
+    email = session["user"]
+    if email not in fake_users:
+        session.clear()
+        return redirect(url_for("login"))
+
+    user = fake_users[email]
+
     if request.method == "POST":
         username = request.form.get("username")
 
@@ -237,13 +276,15 @@ def profile():
             file.save(upload_path)
             session["profile_pic"] = filename
 
-    return render_template("dashboard/profile.html", show_navbar=True)
+    return render_template("dashboard/profile.html", user=user)
 
 
 @app.route("/help")
 @login_required
 def help_page():
-    return render_template("dashboard/help.html", show_navbar=True)
+    email = session["user"]
+    user = fake_users[email]
+    return render_template("dashboard/help.html", user=user)
 
 
 if __name__ == "__main__":
