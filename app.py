@@ -132,7 +132,10 @@ def home():
         return redirect(url_for("login"))
 
     user = fake_users[email]  # get user data from fake database
-    return render_template("dashboard/home.html", user=user)
+    # Slice last 5 transactions
+    last_five = user["transactions"][-5:] if user["transactions"] else []
+
+    return render_template("dashboard/home.html", user=user, transactions=last_five)
 
 
 @app.route("/send", methods=["GET", "POST"])
@@ -149,6 +152,7 @@ def send_money():
     if request.method == "POST":
         recipient = request.form["recipient"]
         amount = float(request.form["amount"])
+        purpose = request.form["purpose"]
 
         # 1️⃣ RULE-BASED FRAUD CHECKS
         # ----------------------------
@@ -165,7 +169,12 @@ def send_money():
         if amount >= 0.9 * current_user["balance"]:
             current_user["fraud_alerts"] += 1  # increment fraud alerts
             current_user["transactions"].append(
-                {"recipient": recipient, "amount": amount, "status": "Fraud Blocked"}
+                {
+                    "recipient": recipient,
+                    "amount": amount,
+                    "purpose": purpose,
+                    "status": "Fraud Blocked",
+                }
             )
 
             return render_template(
@@ -216,7 +225,12 @@ def send_money():
             current_user["fraud_alerts"] += 1
 
             current_user["transactions"].append(
-                {"recipient": recipient, "amount": amount, "status": "Fraud Blocked"}
+                {
+                    "recipient": recipient,
+                    "amount": amount,
+                    "purpose": purpose,
+                    "status": "Fraud Blocked",
+                }
             )
 
             return render_template(
@@ -229,7 +243,12 @@ def send_money():
         current_user["balance"] -= amount
 
         current_user["transactions"].append(
-            {"recipient": recipient, "amount": amount, "status": "Success"}
+            {
+                "recipient": recipient,
+                "amount": amount,
+                "purpose": purpose,
+                "status": "Success",
+            }
         )
 
         return render_template(
@@ -250,7 +269,9 @@ def history():
         return redirect(url_for("login"))
 
     user = fake_users[email]
-    return render_template("dashboard/history.html", user=user)
+    return render_template(
+        "dashboard/history.html", user=user, transactions=user["transactions"]
+    )
 
 
 @app.route("/profile", methods=["GET", "POST"])

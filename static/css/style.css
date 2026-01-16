@@ -14,16 +14,58 @@
 
   --white: #FFFFFF;
   --black: #000000;
+
+
+  /* Background colors */
+  --bg-main: #0B0614;        /* deep dark purple */
+  --bg-card: #120A1F;        /* slightly lighter */
+  --bg-glass: rgba(255,255,255,0.04);
+
+  /* Button colors */
+  --btn-primary: linear-gradient(135deg, #9B6CFF, #F36CFF);
+  --btn-outline: #7F5BFF;
+
+  --grad-primary: linear-gradient(135deg, #8A5CFF, #F46BFF, #FF9F5A);
+  --grad-secondary: linear-gradient(135deg, #5B2EFF, #A95CFF);
+
+  /* Text colors */
+  --text-main: #FFFFFF;
+  --text-muted: #B8AFCF;
+  --text-soft: #8E85A8;
+  
+  /* Status colors */
+  --success: #3DFFB2;
+  --danger: #FF5B7F;
+  --warning: #FFC75F;
+
+/* 🔹 New lighter companions */
+  --bg-light: #1a0f2e;       /* lighter indigo for sections */
+  --bg-lighter: #2A1B3D;     /* soft purple for hover/containers */
+  --accent-light-purple: #6A4C93; /* lighter purple accent */
+  --accent-lavender: #C5B4E3;     /* pastel lavender for highlights */
+  --accent-pink-soft: #FF9FEC;    /* soft neon pink for hover states */
+  --accent-blue-soft: #63A4FF;    /* sky blue for subtle accents */
+  --neutral-light: #F5F6F8;       /* off-white for contrast areas */
+
+
 }
 
 /* Global styles */
+* {
+  margin:0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
 
 body {
-  margin: 0;
   min-height: 100vh;
-  font-family: "Inter", system-ui, sans-serif;
-  background-color: var(--grey-100);
-  color: var(--grey-800);
+  color: var(--text-main); 
+  background-image: linear-gradient(to right top, #1a0f2e, #170d26, #130a1f, #0e0717, #07040d);
+  overflow-y: auto;   /* ensures vertical scroll */
+  overflow-x: hidden; /* prevents accidental horizontal scroll */
+
+  
 }
 
 
@@ -45,7 +87,8 @@ body {
 
 
 .container {
-    padding: 24px;
+    padding-top: 24px;
+    padding-bottom: 0px;
 }
 
 
@@ -122,6 +165,7 @@ body {
   justify-content: center;
 }
 
+
 /* Buttons */
 .btn {
   padding: 12px 24px;
@@ -131,22 +175,23 @@ body {
 }
 
 .btn-primary {
-  background-color: var(--blue-600); 
-  color: white;
+   background: var(--btn-primary);
+   color: var(--text-main);
+   transition: 0.3s ease;
 }
 
 .btn-primary:hover {
-  background-color: var(--blue-700);
+  background: var(--accent-pink-soft);
 }
 
 .btn-outline {
-  border: 2px solid var(--blue-600);
-  color: var(--blue-600);
+  border: 2px solid var(--btn-outline);
+  color: var(--text-main);
 }
 
 .btn-outline:hover {
-  background-color: var(--blue-600);
-  color: white;
+  background-color: var(--btn-outline);
+  color: var(--text-main);
 }
 
 /* Auth Pages (Login & Signup) */
@@ -224,14 +269,54 @@ body {
   padding: 24px;
 }
 
+.dashboard-layout{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  height: 300px;
+  max-width: 1200px;
+  gap: 24px;
+  padding: 0 24px;
+  margin: 0 auto;
+  margin-top: 24px;
+}
+
+.dashboard-text{
+  flex: 3;
+  margin: auto;
+}
+
 .dashboard-title {
-  color: var(--blue-700); 
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--white);
   margin-bottom: 4px;
 }
 
 .dashboard-subtitle {
-  color: var(--grey-500);
+  color: var(--neutral-light);
   margin-bottom: 24px;
+  font-size: 1rem;
+  max-width: 500px; /* adjust until it wraps into 3 lines */
+  line-height: 1.5; /* improves readability */
+  margin-top: 12px;
+
+}
+
+/* Dashboard Actions */
+.dashboard-actions {
+  display: flex;
+  gap: 18px;
+}
+.user-first-name{
+   font-family: 'Satisfy', cursive;
+   font-size: 3.9rem ;
+   color: var(--accent-light-purple);
+}
+
+.dashboard-cards{
+   display: flex;
+   flex: 4; /* takes 5/7 of space */
 }
 
 /* Summary Cards */
@@ -265,20 +350,127 @@ body {
   color: #dc2626;
 }
 
-/* Dashboard Actions */
-.dashboard-actions {
+/* Swipeable container */
+.swipe-container {
   display: flex;
+  overflow-y: auto;
+  scroll-snap-type: x mandatory;
   gap: 16px;
+  padding: 16px 0;
+  scrollbar-width: none; /* hide scrollbar in Firefox */
+}
+.swipe-container::-webkit-scrollbar {
+  display: none; /* hide scrollbar in Chrome/Safari */
 }
 
+.swipe-card {
+  flex: 0 0 80%; /* each card ~80% width */
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  scroll-snap-align: center;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.swipe-card h3 {
+  font-size: 16px;
+  color: var(--text-soft);
+  margin-bottom: 12px;
+}
+
+.swipe-card .card-value {
+  font-size: 28px;
+  font-weight: bold;
+  background: var(--grad-primary);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.swipe-card .card-value.danger {
+  background: var(--danger);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.swipe-card:hover {
+  transform: scale(1.05);
+}
+
+/* Carousel dots */
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background-color: var(--grey-300);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dot.active {
+  background: var(--grad-primary);
+}
+
+
+
+/* Navbar Styles */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 24px;
-  background-color: #0b5ed7; /* Science Blue 700 */
-  color: white;
+  padding: 16px 32px;
+  background: var(--bg-card);
+  border-bottom: 2px solid var(--bg-lighter);
+  border-top: 1px solid var(--bg-lighter);
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top: 25px;
+  border-radius: 12px;
 }
+
+/* Brand link */
+.brand-link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Bom = Inter font */
+.brand-bom {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  color: var(--text-main); 
+  font-size: 20px;
+}
+
+/* Radar = Satisfy cursive */
+.brand-radar {
+  font-family: 'Satisfy', cursive;
+  font-weight: 700;
+  /* color: var(--btn-outline);  */
+  background: var(--grad-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all 0.4s ease;
+  font-size: 22px;
+}
+
+.brand-link:hover .brand-radar {
+  text-shadow: 0 0 6px rgba(255, 159, 236, 0.6); /* soft pink glow */
+  transform: scale(1.03); /* smaller scale */
+}
+
 
 .nav-left {
   display: flex;
@@ -292,31 +484,132 @@ body {
   gap: 20px;
   padding: 0;
   margin: 0;
+  text-decoration: none;
 }
 
 .nav-links a {
-  color: var(--white);
+  color: var(--text-main);
   text-decoration: none;
   font-weight: 500;
+  transition: color 0.3s ease;
+
 }
 
-.nav-profile .profile-link {
+.nav-links a:hover{
+   color: var(--accent-pink-soft); 
+}
+
+/*Nav Profile*/
+.nav-profile .profile-link  {
   display: flex;
   align-items: center;
+  transition: color 0.3s ease;
   gap: 10px;
-  color: var(--white);
   text-decoration: none;
+  
 }
 
-.profile-avatar {
-  width: 36px;
-  height: 36px;
+.profile-link:hover .profile-name{
+   color: var(--accent-pink-soft); 
+}
+
+ 
+.profile-avatar .profile-avatar-img{
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background-color: var(--blue-600); /* Science Blue 600 */
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
+}
+
+/* When it's an image */
+.profile-avatar-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;   /* prevents stretching */
+  border: 2px solid rgba(255,255,255,0.2);
+  transition: transform 0.3s ease;
+
+}
+
+.profile-avatar-img:hover {
+  transform: scale(1.05); /* subtle lift */
+}
+
+
+/* When it's just initials */
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--grad-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text-main);
+  transition: transform 0.3s ease;
+
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
+}
+
+
+.profile-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+   transition: color 0.3s ease;
+
+}
+
+
+/* Footer */
+.site-footer {
+  background: var(--bg-card);
+  border-top: 0.5px solid var(--bg-lighter);
+  padding: 24px 32px;
+  margin-top: 100px;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-content p {
+  color: var(--text-soft);
+  font-size: 14px;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--accent-pink-soft);
+  text-shadow: 0 0 6px rgba(255, 159, 236, 0.6); /* subtle neon glow */
 }
 
 /* Send Money Page */
@@ -360,29 +653,89 @@ body {
   color: #991b1b;
 }
 
-/* History Page */
+/* Transactions Table */
+.history-table {
+  margin-top: 32px;
+  background: var(--bg-card);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  padding: 20px;
+}
+
+.history-table h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--accent-lavender);
+  margin-bottom: 16px;
+}
+
 .history-table table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
 }
 
 .history-table th,
 .history-table td {
-  padding: 12px;
-  border-bottom: 1px solid  #e5e7eb;
+  padding: 12px 16px;
   text-align: left;
+  color: var(--text-main);
 }
 
+.history-table th {
+  background: var(--bg-light);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.history-table tr:nth-child(even) {
+  background: var(--bg-glass);
+}
+
+.history-table tr:hover {
+  background: var(--accent-light-purple);
+  transition: background 0.3s ease;
+}
+
+/* Status Colors */
+.history-table td.success {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.history-table td.danger {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.history-table td.warning {
+  color: var(--warning);
+  font-weight: 600;
+}
+
+/* No Transactions Fallback */
+.no-transactions {
+  color: var(--text-soft);
+  font-style: italic;
+  margin-top: 16px;
+  text-align: center;
+  padding: 20px;
+}
+/* Status colors */
 .success {
-  color: green;
+  color: var(--success);
   font-weight: bold;
 }
 
 .danger {
-  color: #dc2626;
+  color: var(--danger);
   font-weight: bold;
 }
+
+
+
 
 /* Help Page */
 .help-card {

@@ -12,6 +12,7 @@
         <th>Recipient</th>
         <th>Amount</th>
         <th>Status</th>
+        <th>Purpose</th>
       </tr>
     </thead>
 
@@ -27,6 +28,7 @@
         {% else %}
         <td class="danger">Flagged</td>
         {% endif %}
+        <td>{{ tx.purpose }}</td>
       </tr>
       {% endfor %}
     </tbody>

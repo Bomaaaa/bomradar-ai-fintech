@@ -1,40 +1,146 @@
 {% extends "base.html" %} {% block content %}
 
-<div class="dashboard">
-  <h1 class="dashboard-title">Welcome back, {{ user.first_name }}!</h1>
+<div class="dashboard-layout">
+  <!-- Left side text -->
+  <div class="dashboard-text">
+    <h1 class="dashboard-title">
+      Welcome back, <span class="user-first-name">{{ user.first_name }}!</span>
+    </h1>
+    <p class="dashboard-subtitle">
+      Stay in control — monitor every transaction, spot fraud instantly, and
+      enjoy peace of mind in real time.
+    </p>
 
-  <p class="dashboard-subtitle">
-    Monitor transactions and detect fraud in real time
-  </p>
-
-  <!-- Summary Cards -->
-  <div class="summary-cards">
-    <div class="card">
-      <h3>Wallet Balance</h3>
-      <p class="card-value">₺ {{ user.balance }}</p>
-    </div>
-
-    <div class="card">
-      <h3>Transactions</h3>
-      <p class="card-value">{{ user.transactions | length }}</p>
-    </div>
-
-    <div class="card">
-      <h3>Fraud Alerts</h3>
-      <p class="card-value danger">{{ user.fraud_alerts }}</p>
+    <!-- Primary Actions -->
+    <div class="dashboard-actions">
+      <a href="{{ url_for('send_money') }}" class="btn btn-primary">
+        Send Money
+      </a>
+      <a href="{{ url_for('history') }}" class="btn btn-outline">
+        View History
+      </a>
     </div>
   </div>
 
-  <!-- Primary Actions -->
-  <div class="dashboard-actions">
-    <a href="{{ url_for('send_money') }}" class="btn btn-primary">
-      Send Money
-    </a>
+  <!-- Right side swipeable cards -->
+  <div class="dashboard-cards">
+    <div class="swipe-container" id="swipeContainer">
+      <div class="swipe-card">
+        <h3>Wallet Balance</h3>
+        <p class="card-value">₺ {{ user.balance }}</p>
+      </div>
 
-    <a href="{{ url_for('history') }}" class="btn btn-outline">
-      View History
-    </a>
+      <div class="swipe-card">
+        <h3>Transactions</h3>
+        <p class="card-value">{{ user.transactions | length }}</p>
+      </div>
+
+      <div class="swipe-card">
+        <h3>Fraud Alerts</h3>
+        <p class="card-value danger">{{ user.fraud_alerts }}</p>
+      </div>
+
+      <!-- Navigation Dots -->
+      <div class="carousel-dots" id="carouselDots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+    </div>
+
+    <!-- Radio Buttons start -->
+    <!-- <input type="radio" name="radio-btn" id="radio1" />
+    <input type="radio" name="radio-btn" id="radio2" />
+    <input type="radio" name="radio-btn" id="radio3" /> -->
+    <!--Radio Buttons end-->
+
+    <!--Automatic navigation start-->
+    <!-- <div class="navigation-auto">
+      <div class="auto-btn1"></div>
+      <div class="auto-btn2"></div>
+      <div class="auto-btn3"></div>
+    </div> -->
+    <!--Automatic navigation end-->
+
+    <!--Manual navigation start-->
+    <!-- <div class="navigation-manual">
+      <label for="radio1" class="manual-btn"></label>
+      <label for="radio2" class="manual-btn"></label>
+      <label for="radio3" class="manual-btn"></label>
+    </div> -->
+    <!--Manual navigation end-->
   </div>
 </div>
+
+<!-- Transaction History Table -->
+<div class="history-table">
+  <h2>Recent Transactions</h2>
+  {% if transactions and transactions|length > 0 %}
+  <table>
+    <thead>
+      <tr>
+        <th>Merchant</th>
+        <th>Date</th>
+        <th>Amount</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for txn in transactions %}
+      <tr>
+        <td data-label="Merchant">{{ txn.merchant }}</td>
+        <td data-label="Date">{{ txn.date }}</td>
+        <td data-label="Amount">₺ {{ txn.amount }}</td>
+        <td
+          data-label="Status"
+          class="{{ 'success' if txn.status == 'Success' else 'danger' }}"
+        >
+          {{ txn.status }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="no-transactions">No transactions yet.</p>
+  {% endif %}
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-content">
+    <p>© 2026 BomRadar. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="#">Twitter</a></li>
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">LinkedIn</a></li>
+      <li><a href="#">GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+
+<!-- Carousel Script -->
+<script>
+  const swipeContainer = document.getElementById("swipeContainer");
+  const dots = document.querySelectorAll("#carouselDots .dot");
+
+  swipeContainer.addEventListener("scroll", () => {
+    const cardWidth = swipeContainer.querySelector(".swipe-card").offsetWidth;
+    const index = Math.round(swipeContainer.scrollLeft / cardWidth);
+
+    dots.forEach((dot, i) => {
+      dot.classList.toggle("active", i === index);
+    });
+  });
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener("click", () => {
+      swipeContainer.scrollTo({
+        left: swipeContainer.querySelector(".swipe-card").offsetWidth * i,
+        behavior: "smooth",
+      });
+    });
+  });
+</script>
 
 {% endblock %}

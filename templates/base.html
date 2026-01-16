@@ -7,13 +7,20 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Satisfy&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <!-- Navbar -->
     {% if user %}
     <nav class="navbar">
       <div class="nav-brand">
-        <a href="{{ url_for('home') }}" class="brand-link">BomRadar</a>
+        <a href="{{ url_for('home') }}" class="brand-link">
+          <span class="brand-bom">Bom</span
+          ><span class="brand-radar">Radar</span></a
+        >
       </div>
 
       <ul class="nav-links">
@@ -31,6 +38,7 @@
           <img
             src="{{ url_for('static', filename='uploads/' ~ session['profile_pic']) }}"
             class="profile-avatar-img"
+            alt="Profile image"
           />
           {% else %}
           <div class="profile-avatar">{{ user.first_name[0] }}</div>
